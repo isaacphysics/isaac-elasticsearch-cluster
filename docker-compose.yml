@@ -17,7 +17,7 @@ services:
       # - "cluster.initial_master_nodes=${HOSTNAME}-phy-node"
     ulimits:
       memlock: -1 # part of disabling swap
-      nproc: -1 # doc suggestion: at least 2,048 our docker default is unlimited
+      nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
       nofile: 1048576 # doc suggestion: at least 65,536
     volumes:
       - phy-content:/usr/share/elasticsearch/data
@@ -40,7 +40,7 @@ services:
       - "node.roles=master,voting_only"
     ulimits:
       memlock: -1 # part of disabling swap
-      nproc: 2048 # doc suggestion: at least 2,048
+      nproc: 4096 # doc suggestion: at least 4,096
       nofile: 65536 # doc suggestion: at least 65,536
     networks:
       default:
@@ -62,7 +62,7 @@ services:
       # - "cluster.initial_master_nodes=${HOSTNAME}-cs-node"
     ulimits:
       memlock: -1 # part of disabling swap
-      nproc: -1 # doc suggestion: at least 2,048 our docker default is unlimited
+      nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
       nofile: 1048576 # doc suggestion: at least 65,536
     volumes:
       - cs-content:/usr/share/elasticsearch/data
@@ -85,7 +85,7 @@ services:
       - "node.roles=master,voting_only"
     ulimits:
       memlock: -1 # part of disabling swap
-      nproc: 2048 # doc suggestion: at least 2,048
+      nproc: 4096 # doc suggestion: at least 4,096
       nofile: 65536 # doc suggestion: at least 65,536
     networks:
       default:
