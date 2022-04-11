@@ -11,9 +11,9 @@ We need to follow a slightly different procedure to set up the cluster for the v
 
 Uncomment the lines in **docker-compose.yml** which look like the following:
 ```yaml
-	- "cluster.initial_master_nodes=${HOSTNAME}-phy-node"
-	# ...
-	- "cluster.initial_master_nodes=${HOSTNAME}-cs-node"
+- "cluster.initial_master_nodes=${HOSTNAME}-phy-node"
+# ...
+- "cluster.initial_master_nodes=${HOSTNAME}-cs-node"
 ```
 
 Then ask docker to create the containers.
