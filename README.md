@@ -32,7 +32,7 @@ This procedure will need to happen on each of the two machines.
 
 Finally, on the lead machine, run:
 ```bash
-./make-leader
+./make-leader.py
 ```
 > You might need to `chmod` **make-leader.py** so that it can be treated as an executable.
 
