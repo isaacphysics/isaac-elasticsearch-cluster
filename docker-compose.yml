@@ -5,7 +5,7 @@ services:
   phy-elastic-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
     container_name: phy-elastic-live
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
       - "cluster.name=isaac-phy-live-content"
       - "network.host=${LOCAL_PHY_ELASTIC_IP}"
@@ -15,6 +15,9 @@ services:
       - "node.name=${HOSTNAME}-phy-node"
       # ! When starting a brand new Elasticsearch cluster for the first time, un-comment for cluster bootstrap VV
       # - "cluster.initial_master_nodes=${HOSTNAME}-phy-node"
+      - "http.max_content_length=512mb"
+      - "xpack.security.enabled=true"
+      - "ELASTIC_PASSWORD=${PHY_ELASTIC_PASSWORD}"
     ulimits:
       memlock: -1 # part of disabling swap
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
@@ -29,7 +32,7 @@ services:
   phy-elastic-voter-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
     container_name: phy-elastic-voter-live
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
       - "cluster.name=isaac-phy-live-content"
       - "network.host=${LOCAL_PHY_ELASTIC_VOTER_IP}"
@@ -50,7 +53,7 @@ services:
   cs-elastic-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
     container_name: cs-elastic-live
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
       - "cluster.name=isaac-cs-live-content"
       - "network.host=${LOCAL_CS_ELASTIC_IP}"
@@ -60,6 +63,9 @@ services:
       - "node.name=${HOSTNAME}-cs-node"
       # ! When starting a brand new Elasticsearch cluster for the first time, un-comment for cluster bootstrap VV
       # - "cluster.initial_master_nodes=${HOSTNAME}-cs-node"
+      - "http.max_content_length=512mb"
+      - "xpack.security.enabled=true"
+      - "ELASTIC_PASSWORD=${CS_ELASTIC_PASSWORD}"
     ulimits:
       memlock: -1 # part of disabling swap
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
@@ -74,7 +80,7 @@ services:
   cs-elastic-voter-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
     container_name: cs-elastic-voter-live
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
       - "cluster.name=isaac-cs-live-content"
       - "network.host=${LOCAL_CS_ELASTIC_VOTER_IP}"
