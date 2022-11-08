@@ -2,14 +2,14 @@
 # If `sysctl vm.max_map_count` is < 262144, then `sysctl -w vm.max_map_count=262144` and set vm.max_map_count in /etc/sysctl.conf to the same value # elasticsearch(lx) had 16777215
 version: '2'
 services:
-  phy-elastic-live:
+  phy-elasticsearch-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
-    container_name: phy-elastic-live
+    container_name: phy-elasticsearch-live
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
-      - "cluster.name=isaac-phy-live-content"
-      - "network.host=${LOCAL_PHY_ELASTIC_IP}"
-      - "discovery.seed_hosts=${REMOTE_PHY_ELASTIC_IP},${LOCAL_PHY_ELASTIC_VOTER_IP},${REMOTE_PHY_ELASTIC_VOTER_IP}" # other master-eligible nodes
+      - "cluster.name=isaac-phy-content"
+      - "network.host=${LOCAL_PHY_ELASTICSEARCH_IP}"
+      - "discovery.seed_hosts=${REMOTE_PHY_ELASTICSEARCH_IP},${LOCAL_PHY_ELASTICSEARCH_VOTER_IP},${REMOTE_PHY_ELASTICSEARCH_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms6g -Xmx6g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-phy-node"
@@ -23,20 +23,20 @@ services:
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
       nofile: 1048576 # doc suggestion: at least 65,536
     volumes:
-      - phy-content:/usr/share/elasticsearch/data
+      - phy-elasticsearch-content:/usr/share/elasticsearch/data
     networks:
       default:
-        ipv4_address: "${LOCAL_PHY_ELASTIC_IP}"
+        ipv4_address: "${LOCAL_PHY_ELASTICSEARCH_IP}"
     restart: unless-stopped
 
-  phy-elastic-voter-live:
+  phy-elasticsearch-voter-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
-    container_name: phy-elastic-voter-live
+    container_name: phy-elasticsearch-voter-live
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
-      - "cluster.name=isaac-phy-live-content"
-      - "network.host=${LOCAL_PHY_ELASTIC_VOTER_IP}"
-      - "discovery.seed_hosts=${LOCAL_PHY_ELASTIC_IP},${REMOTE_PHY_ELASTIC_IP},${REMOTE_PHY_ELASTIC_VOTER_IP}" # other master-eligible nodes
+      - "cluster.name=isaac-phy-content"
+      - "network.host=${LOCAL_PHY_ELASTICSEARCH_VOTER_IP}"
+      - "discovery.seed_hosts=${LOCAL_PHY_ELASTICSEARCH_IP},${REMOTE_PHY_ELASTICSEARCH_IP},${REMOTE_PHY_ELASTICSEARCH_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-phy-voter-node"
@@ -47,17 +47,17 @@ services:
       nofile: 65536 # doc suggestion: at least 65,536
     networks:
       default:
-        ipv4_address: "${LOCAL_PHY_ELASTIC_VOTER_IP}"
+        ipv4_address: "${LOCAL_PHY_ELASTICSEARCH_VOTER_IP}"
     restart: unless-stopped
 
-  cs-elastic-live:
+  cs-elasticsearch-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
-    container_name: cs-elastic-live
+    container_name: cs-elasticsearch-live
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
-      - "cluster.name=isaac-cs-live-content"
-      - "network.host=${LOCAL_CS_ELASTIC_IP}"
-      - "discovery.seed_hosts=${REMOTE_CS_ELASTIC_IP},${LOCAL_CS_ELASTIC_VOTER_IP},${REMOTE_CS_ELASTIC_VOTER_IP}" # other master-eligible nodes
+      - "cluster.name=isaac-cs-content"
+      - "network.host=${LOCAL_CS_ELASTICSEARCH_IP}"
+      - "discovery.seed_hosts=${REMOTE_CS_ELASTICSEARCH_IP},${LOCAL_CS_ELASTICSEARCH_VOTER_IP},${REMOTE_CS_ELASTICSEARCH_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms6g -Xmx6g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-cs-node"
@@ -71,20 +71,20 @@ services:
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
       nofile: 1048576 # doc suggestion: at least 65,536
     volumes:
-      - cs-content:/usr/share/elasticsearch/data
+      - cs-elasticsearch-content:/usr/share/elasticsearch/data
     networks:
       default:
-        ipv4_address: "${LOCAL_CS_ELASTIC_IP}"
+        ipv4_address: "${LOCAL_CS_ELASTICSEARCH_IP}"
     restart: unless-stopped
 
-  cs-elastic-voter-live:
+  cs-elasticsearch-voter-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
-    container_name: cs-elastic-voter-live
+    container_name: cs-elasticsearch-voter-live
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
-      - "cluster.name=isaac-cs-live-content"
-      - "network.host=${LOCAL_CS_ELASTIC_VOTER_IP}"
-      - "discovery.seed_hosts=${LOCAL_CS_ELASTIC_IP},${REMOTE_CS_ELASTIC_IP},${REMOTE_CS_ELASTIC_VOTER_IP}" # other master-eligible nodes
+      - "cluster.name=isaac-cs-content"
+      - "network.host=${LOCAL_CS_ELASTICSEARCH_VOTER_IP}"
+      - "discovery.seed_hosts=${LOCAL_CS_ELASTICSEARCH_IP},${REMOTE_CS_ELASTICSEARCH_IP},${REMOTE_CS_ELASTICSEARCH_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-cs-voter-node"
@@ -95,16 +95,16 @@ services:
       nofile: 65536 # doc suggestion: at least 65,536
     networks:
       default:
-        ipv4_address: "${LOCAL_CS_ELASTIC_VOTER_IP}"
+        ipv4_address: "${LOCAL_CS_ELASTICSEARCH_VOTER_IP}"
     restart: unless-stopped
 
 volumes:
-  phy-content:
+  phy-elasticsearch-content:
     external:
-      name: phy-content
-  cs-content:
+      name: phy-elasticsearch-content
+  cs-elasticsearch-content:
     external:
-      name: cs-content
+      name: cs-elasticsearch-content
 
 networks:
   default:
