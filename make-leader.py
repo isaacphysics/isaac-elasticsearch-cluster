@@ -18,7 +18,7 @@ node_types = ['master_candidate', 'voter']
 
 def ip_env_var(site, destination, node_type):
   """Form the environment variable name from the function arguments"""
-  return f'{destination.upper()}_{site.upper()}_ELASTIC_{"VOTER_" if node_type == "voter" else ""}IP'
+  return f'{destination.upper()}_{site.upper()}_ELASTICSEARCH_{"VOTER_" if node_type == "voter" else ""}IP'
 
 def elastic_ip(site, destination='local', node_type='master_candidate'):
   """Returns the IP address of the node matching the function's arguments"""
@@ -39,7 +39,7 @@ def get_node_states():
       print(
         f'ERROR: ElasticSearch node at {ip_env_var(site, destination, node_type)} is not up. '
         f'Bring it up by typing the following command{" on the REMOTE MACHINE" if destination == "remote" else ""}:\n'
-        f'export HOSTNAME && docker-compose up -d {site.lower()}-elastic-{"voter-" if node_type == "voter" else ""}live'
+        f'export HOSTNAME && docker-compose up -d {site.lower()}-elasticsearch-{"voter-" if node_type == "voter" else ""}live'
       )
       sys.exit(ERROR_EXIT_CODE)
   return nodes_info
