@@ -23,7 +23,7 @@ services:
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
       nofile: 1048576 # doc suggestion: at least 65,536
     volumes:
-      - phy-content:/usr/share/elasticsearch/data
+      - phy-elasticsearch-content:/usr/share/elasticsearch/data
     networks:
       default:
         ipv4_address: "${LOCAL_PHY_ELASTICSEARCH_IP}"
@@ -71,7 +71,7 @@ services:
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
       nofile: 1048576 # doc suggestion: at least 65,536
     volumes:
-      - cs-content:/usr/share/elasticsearch/data
+      - cs-elasticsearch-content:/usr/share/elasticsearch/data
     networks:
       default:
         ipv4_address: "${LOCAL_CS_ELASTICSEARCH_IP}"
@@ -99,12 +99,12 @@ services:
     restart: unless-stopped
 
 volumes:
-  phy-content:
+  phy-elasticsearch-content:
     external:
-      name: phy-content
-  cs-content:
+      name: phy-elasticsearch-content
+  cs-elasticsearch-content:
     external:
-      name: cs-content
+      name: cs-elasticsearch-content
 
 networks:
   default:
