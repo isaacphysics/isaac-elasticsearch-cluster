@@ -8,6 +8,8 @@ import sys
 import itertools
 import requests
 from pprint import pprint
+import base64
+
 
 SUCCESS_EXIT_CODE = 0
 ERROR_EXIT_CODE = 1
@@ -15,6 +17,15 @@ ERROR_EXIT_CODE = 1
 sites = ['cs', 'phy']
 destinations = ['local', 'remote']
 node_types = ['master_candidate', 'voter']
+
+site_password = {
+  'cs': os.getenv('CS_ELASTIC_PASSWORD'),
+  'phy': os.getenv('PHY_ELASTIC_PASSWORD')
+}
+
+def auth_header(site):
+  token = f'elastic:{site_password[site]}'.encode()
+  return {'Authorization': f'Basic {base64.b64encode(token).decode("utf8")}'}
 
 def ip_env_var(site, destination, node_type):
   """Form the environment variable name from the function arguments"""
@@ -29,7 +40,7 @@ def get_node_states():
   nodes_info = {}
   for site, destination, node_type in itertools.product(sites, destinations, node_types): # every combination
     try:
-      node_response = requests.get(f'http://{elastic_ip(site, destination, node_type)}:9200')
+      node_response = requests.get(f'http://{elastic_ip(site, destination, node_type)}:9200', headers=auth_header(site))
       node_name = node_response.json()['name']
       nodes_info[node_name] = {
         'site': site, 'destination': destination, 'node_type': node_type,
@@ -46,7 +57,7 @@ def get_node_states():
 
 def get_cluster_state():
   """Returns the clusters' states by site"""
-  return {site: requests.get(f'http://{elastic_ip(site)}:9200/_cluster/state').json() for site in sites}
+  return {site: requests.get(f'http://{elastic_ip(site)}:9200/_cluster/state', headers=auth_header(site)).json() for site in sites}
 
 def get_node_info_by_id(nodes_info, cluster_info):
   """Combines node and cluster info to get IDs for the nodes and indexes the result by id"""
@@ -78,7 +89,7 @@ def update_cluster_voting_configuration(cluster_info, nodes_by_id):
   """Clears the excluded voters list and then adds the remote voter to the list for each site's cluster"""
   for site in sites:
     # Clear the voting exclusions list for this site's cluster
-    clear_exclusions_response = requests.delete(f'http://{elastic_ip(site)}:9200/_cluster/voting_config_exclusions?wait_for_removal=false')
+    clear_exclusions_response = requests.delete(f'http://{elastic_ip(site)}:9200/_cluster/voting_config_exclusions?wait_for_removal=false', headers=auth_header(site))
     if clear_exclusions_response.status_code != 200:
       print("ERROR: Failed to clear voting configuration exclusions list. Run again or try manually")
       pprint(clear_exclusions_response.json())
@@ -94,7 +105,7 @@ def update_cluster_voting_configuration(cluster_info, nodes_by_id):
       sys.exit(ERROR_EXIT_CODE)
 
     # Add the remote voter ID to the voting exclusions list for this site's cluster
-    exclusions_update_response = requests.post(f'http://{elastic_ip(site)}:9200/_cluster/voting_config_exclusions?node_ids={remote_voter_id}')
+    exclusions_update_response = requests.post(f'http://{elastic_ip(site)}:9200/_cluster/voting_config_exclusions?node_ids={remote_voter_id}', headers=auth_header(site))
     if exclusions_update_response.status_code != 200:
       print("ERROR: Failed to add {remote_voter_id} to the voting configuration exclusions list. Run again or try manually")
       pprint(exclusions_update_response.json())
