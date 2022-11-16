@@ -16,14 +16,21 @@ services:
       # ! When starting a brand new Elasticsearch cluster for the first time, un-comment for cluster bootstrap VV
       # - "cluster.initial_master_nodes=${HOSTNAME}-phy-node"
       - "http.max_content_length=512mb"
-      - "xpack.security.enabled=true"
-      - "ELASTIC_PASSWORD=${PHY_ELASTIC_PASSWORD}"
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${PHY_ELASTIC_PASSWORD}
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.client_authentication=required
+      - xpack.security.transport.ssl.keystore.path=certs/elastic-certificates.p12
+      - xpack.security.transport.ssl.truststore.path=certs/elastic-certificates.p12
+      - xpack.security.http.ssl.enabled=false
     ulimits:
       memlock: -1 # part of disabling swap
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
       nofile: 1048576 # doc suggestion: at least 65,536
     volumes:
       - phy-elasticsearch-content:/usr/share/elasticsearch/data
+      - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
         ipv4_address: "${LOCAL_PHY_ELASTICSEARCH_IP}"
@@ -41,10 +48,20 @@ services:
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-phy-voter-node"
       - "node.roles=master,voting_only"
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${PHY_ELASTIC_PASSWORD}
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.client_authentication=required
+      - xpack.security.transport.ssl.keystore.path=certs/elastic-certificates.p12
+      - xpack.security.transport.ssl.truststore.path=certs/elastic-certificates.p12
+      - xpack.security.http.ssl.enabled=false
     ulimits:
       memlock: -1 # part of disabling swap
       nproc: 4096 # doc suggestion: at least 4,096
       nofile: 65536 # doc suggestion: at least 65,536
+    volumes:
+      - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
         ipv4_address: "${LOCAL_PHY_ELASTICSEARCH_VOTER_IP}"
@@ -64,14 +81,21 @@ services:
       # ! When starting a brand new Elasticsearch cluster for the first time, un-comment for cluster bootstrap VV
       # - "cluster.initial_master_nodes=${HOSTNAME}-cs-node"
       - "http.max_content_length=512mb"
-      - "xpack.security.enabled=true"
-      - "ELASTIC_PASSWORD=${CS_ELASTIC_PASSWORD}"
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${PHY_ELASTIC_PASSWORD}
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.client_authentication=required
+      - xpack.security.transport.ssl.keystore.path=certs/elastic-certificates.p12
+      - xpack.security.transport.ssl.truststore.path=certs/elastic-certificates.p12
+      - xpack.security.http.ssl.enabled=false
     ulimits:
       memlock: -1 # part of disabling swap
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
       nofile: 1048576 # doc suggestion: at least 65,536
     volumes:
       - cs-elasticsearch-content:/usr/share/elasticsearch/data
+      - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
         ipv4_address: "${LOCAL_CS_ELASTICSEARCH_IP}"
@@ -89,10 +113,20 @@ services:
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-cs-voter-node"
       - "node.roles=master,voting_only"
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${PHY_ELASTIC_PASSWORD}
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.client_authentication=required
+      - xpack.security.transport.ssl.keystore.path=certs/elastic-certificates.p12
+      - xpack.security.transport.ssl.truststore.path=certs/elastic-certificates.p12
+      - xpack.security.http.ssl.enabled=false
     ulimits:
       memlock: -1 # part of disabling swap
       nproc: 4096 # doc suggestion: at least 4,096
       nofile: 65536 # doc suggestion: at least 65,536
+    volumes:
+      - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
         ipv4_address: "${LOCAL_CS_ELASTICSEARCH_VOTER_IP}"
