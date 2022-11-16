@@ -16,6 +16,7 @@ services:
       # ! When starting a brand new Elasticsearch cluster for the first time, un-comment for cluster bootstrap VV
       # - "cluster.initial_master_nodes=${HOSTNAME}-phy-node"
       - "http.max_content_length=512mb"
+      - ingest.geoip.downloader.enabled=false
       - xpack.security.enabled=true
       - ELASTIC_PASSWORD=${PHY_ELASTIC_PASSWORD}
       - xpack.security.transport.ssl.enabled=true
@@ -81,6 +82,7 @@ services:
       # ! When starting a brand new Elasticsearch cluster for the first time, un-comment for cluster bootstrap VV
       # - "cluster.initial_master_nodes=${HOSTNAME}-cs-node"
       - "http.max_content_length=512mb"
+      - ingest.geoip.downloader.enabled=false
       - xpack.security.enabled=true
       - ELASTIC_PASSWORD=${PHY_ELASTIC_PASSWORD}
       - xpack.security.transport.ssl.enabled=true
