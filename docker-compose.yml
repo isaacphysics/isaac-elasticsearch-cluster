@@ -68,23 +68,23 @@ services:
         ipv4_address: "${LOCAL_PHY_ELASTICSEARCH_VOTER_IP}"
     restart: unless-stopped
 
-  cs-elasticsearch-live:
+  ada-elasticsearch-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
-    container_name: cs-elasticsearch-live
+    container_name: ada-elasticsearch-live
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
-      - "cluster.name=isaac-cs-content"
-      - "network.host=${LOCAL_CS_ELASTICSEARCH_IP}"
-      - "discovery.seed_hosts=${REMOTE_CS_ELASTICSEARCH_IP},${LOCAL_CS_ELASTICSEARCH_VOTER_IP},${REMOTE_CS_ELASTICSEARCH_VOTER_IP}" # other master-eligible nodes
+      - "cluster.name=isaac-ada-content"
+      - "network.host=${LOCAL_ADA_ELASTICSEARCH_IP}"
+      - "discovery.seed_hosts=${REMOTE_ADA_ELASTICSEARCH_IP},${LOCAL_ADA_ELASTICSEARCH_VOTER_IP},${REMOTE_ADA_ELASTICSEARCH_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms6g -Xmx6g"
       - "bootstrap.memory_lock=true" # part of disabling swap
-      - "node.name=${HOSTNAME}-cs-node"
+      - "node.name=${HOSTNAME}-ada-node"
       # ! When starting a brand new Elasticsearch cluster for the first time, un-comment for cluster bootstrap VV
-      # - "cluster.initial_master_nodes=${HOSTNAME}-cs-node"
+      # - "cluster.initial_master_nodes=${HOSTNAME}-ada-node"
       - "http.max_content_length=512mb"
       - ingest.geoip.downloader.enabled=false
       - xpack.security.enabled=true
-      - ELASTIC_PASSWORD=${PHY_ELASTIC_PASSWORD}
+      - ELASTIC_PASSWORD=${ADA_ELASTIC_PASSWORD}
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.security.transport.ssl.client_authentication=required
@@ -96,27 +96,27 @@ services:
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
       nofile: 1048576 # doc suggestion: at least 65,536
     volumes:
-      - cs-elasticsearch-content:/usr/share/elasticsearch/data
+      - ada-elasticsearch-content:/usr/share/elasticsearch/data
       - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
-        ipv4_address: "${LOCAL_CS_ELASTICSEARCH_IP}"
+        ipv4_address: "${LOCAL_ADA_ELASTICSEARCH_IP}"
     restart: unless-stopped
 
-  cs-elasticsearch-voter-live:
+  ada-elasticsearch-voter-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
-    container_name: cs-elasticsearch-voter-live
+    container_name: ada-elasticsearch-voter-live
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
-      - "cluster.name=isaac-cs-content"
-      - "network.host=${LOCAL_CS_ELASTICSEARCH_VOTER_IP}"
-      - "discovery.seed_hosts=${LOCAL_CS_ELASTICSEARCH_IP},${REMOTE_CS_ELASTICSEARCH_IP},${REMOTE_CS_ELASTICSEARCH_VOTER_IP}" # other master-eligible nodes
+      - "cluster.name=isaac-ada-content"
+      - "network.host=${LOCAL_ADA_ELASTICSEARCH_VOTER_IP}"
+      - "discovery.seed_hosts=${LOCAL_ADA_ELASTICSEARCH_IP},${REMOTE_ADA_ELASTICSEARCH_IP},${REMOTE_ADA_ELASTICSEARCH_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "bootstrap.memory_lock=true" # part of disabling swap
-      - "node.name=${HOSTNAME}-cs-voter-node"
+      - "node.name=${HOSTNAME}-ada-voter-node"
       - "node.roles=master,voting_only"
       - xpack.security.enabled=true
-      - ELASTIC_PASSWORD=${PHY_ELASTIC_PASSWORD}
+      - ELASTIC_PASSWORD=${ADA_ELASTIC_PASSWORD}
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.security.transport.ssl.client_authentication=required
@@ -131,16 +131,16 @@ services:
       - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
-        ipv4_address: "${LOCAL_CS_ELASTICSEARCH_VOTER_IP}"
+        ipv4_address: "${LOCAL_ADA_ELASTICSEARCH_VOTER_IP}"
     restart: unless-stopped
 
 volumes:
   phy-elasticsearch-content:
     external:
       name: phy-elasticsearch-content
-  cs-elasticsearch-content:
+  ada-elasticsearch-content:
     external:
-      name: cs-elasticsearch-content
+      name: ada-elasticsearch-content
 
 networks:
   default:
