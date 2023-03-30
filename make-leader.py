@@ -14,13 +14,13 @@ import base64
 SUCCESS_EXIT_CODE = 0
 ERROR_EXIT_CODE = 1
 
-sites = ['cs', 'phy']
+sites = ['phy', 'ada']
 destinations = ['local', 'remote']
 node_types = ['master_candidate', 'voter']
 
 site_password = {
-  'cs': os.getenv('CS_ELASTIC_PASSWORD'),
-  'phy': os.getenv('PHY_ELASTIC_PASSWORD')
+  'phy': os.getenv('PHY_ELASTIC_PASSWORD'),
+  'ada': os.getenv('ADA_ELASTIC_PASSWORD')
 }
 
 def auth_header(site):
