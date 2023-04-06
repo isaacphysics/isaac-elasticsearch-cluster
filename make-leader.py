@@ -49,10 +49,11 @@ def get_node_states():
     except requests.exceptions.ConnectionError as e:
       print(
         f'ERROR: ElasticSearch node at {ip_env_var(site, destination, node_type)} is not up. '
-        f'Bring it up by typing the following command{" on the REMOTE MACHINE" if destination == "remote" else ""}:\n'
+        f'If this is unexpected, bring it up by typing the following command{" on the REMOTE MACHINE" if destination == "remote" else ""}:\n'
         f'export HOSTNAME && docker-compose up -d {site.lower()}-elasticsearch-{"voter-" if node_type == "voter" else ""}live'
       )
-      sys.exit(ERROR_EXIT_CODE)
+      if "n" == input('Continue? [y/n]'):
+        sys.exit(ERROR_EXIT_CODE)
   return nodes_info
 
 def get_cluster_state():
@@ -78,9 +79,9 @@ def local_is_leader(cluster_info, nodes_by_id):
   for site in sites:
     local_score = remote_score = 0
     for node_id in cluster_info[site]['metadata']['cluster_coordination']['last_accepted_config']:
-      if nodes_by_id[node_id]['destination'] == 'local':
+      if nodes_by_id.get(node_id, {'destination': None})['destination'] == 'local':
         local_score += 1
-      else:
+      elif nodes_by_id.get(node_id, {'destination': None})['destination'] == 'remote':
         remote_score += 1
     local_is_leader_for_all_sites &= local_score > remote_score
   return local_is_leader_for_all_sites
