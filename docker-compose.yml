@@ -12,12 +12,12 @@ services:
       - "discovery.seed_hosts=${REMOTE_SCI_ELASTICSEARCH_V8_IP},${LOCAL_SCI_ELASTICSEARCH_V8_IP},${REMOTE_SCI_ELASTICSEARCH_V8_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms6g -Xmx6g"
       - "bootstrap.memory_lock=true" # part of disabling swap
-      - "node.name=${HOSTNAME}-phy-node"
+      - "node.name=${HOSTNAME}-sci-node"
       # ! When starting a brand new Elasticsearch cluster for the first time, un-comment for cluster bootstrap VV
-      # - "cluster.initial_master_nodes=${HOSTNAME}-phy-node"
+      # - "cluster.initial_master_nodes=${HOSTNAME}-sci-node"
       - "http.max_content_length=512mb"
       - xpack.security.enabled=true
-      - ELASTIC_PASSWORD=${PHY_ELASTIC_PASSWORD}
+      - ELASTIC_PASSWORD=${SCI_ELASTIC_PASSWORD}
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.security.transport.ssl.client_authentication=required
@@ -47,10 +47,10 @@ services:
       - "discovery.seed_hosts=${LOCAL_SCI_ELASTICSEARCH_V8_IP},${REMOTE_SCI_ELASTICSEARCH_V8_IP},${REMOTE_SCI_ELASTICSEARCH_V8_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "bootstrap.memory_lock=true" # part of disabling swap
-      - "node.name=${HOSTNAME}-phy-voter-node"
+      - "node.name=${HOSTNAME}-sci-voter-node"
       - "node.roles=master,voting_only"
       - xpack.security.enabled=true
-      - ELASTIC_PASSWORD=${PHY_ELASTIC_PASSWORD}
+      - ELASTIC_PASSWORD=${SCI_ELASTIC_PASSWORD}
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.security.transport.ssl.client_authentication=required
