@@ -30,7 +30,7 @@ services:
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
       nofile: 1048576 # doc suggestion: at least 65,536
     volumes:
-      - phy-elasticsearch-content:/usr/share/elasticsearch/data
+      - elasticsearch-v8-sci-data:/usr/share/elasticsearch/data
       - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
@@ -96,7 +96,7 @@ services:
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
       nofile: 1048576 # doc suggestion: at least 65,536
     volumes:
-      - ada-elasticsearch-content:/usr/share/elasticsearch/data
+      - elasticsearch-v8-ada-data:/usr/share/elasticsearch/data
       - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
@@ -135,12 +135,12 @@ services:
     restart: unless-stopped
 
 volumes:
-  phy-elasticsearch-content:
+  elasticsearch-v8-sci-data:
     external:
-      name: phy-elasticsearch-content
-  ada-elasticsearch-content:
+      name: elasticsearch-v8-sci-data
+  elasticsearch-v8-ada-data:
     external:
-      name: ada-elasticsearch-content
+      name: elasticsearch-v8-ada-data
 
 networks:
   default:
