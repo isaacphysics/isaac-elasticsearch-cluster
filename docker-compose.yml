@@ -7,7 +7,7 @@ services:
     container_name: phy-elasticsearch-live
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
-      - "cluster.name=isaac-phy-content"
+      - "cluster.name=sci-content-v8"
       - "network.host=${LOCAL_SCI_ELASTICSEARCH_V8_IP}"
       - "discovery.seed_hosts=${REMOTE_SCI_ELASTICSEARCH_V8_IP},${LOCAL_SCI_ELASTICSEARCH_V8_IP},${REMOTE_SCI_ELASTICSEARCH_V8_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms6g -Xmx6g"
@@ -42,7 +42,7 @@ services:
     container_name: phy-elasticsearch-voter-live
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
-      - "cluster.name=isaac-phy-content"
+      - "cluster.name=sci-content-v8"
       - "network.host=${LOCAL_SCI_ELASTICSEARCH_V8_VOTER_IP}"
       - "discovery.seed_hosts=${LOCAL_SCI_ELASTICSEARCH_V8_IP},${REMOTE_SCI_ELASTICSEARCH_V8_IP},${REMOTE_SCI_ELASTICSEARCH_V8_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
@@ -73,7 +73,7 @@ services:
     container_name: ada-elasticsearch-live
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
-      - "cluster.name=isaac-ada-content"
+      - "cluster.name=ada-content-v8"
       - "network.host=${LOCAL_ADA_ELASTICSEARCH_V8_IP}"
       - "discovery.seed_hosts=${REMOTE_ADA_ELASTICSEARCH_V8_IP},${LOCAL_ADA_ELASTICSEARCH_V8_VOTER_IP},${REMOTE_ADA_ELASTICSEARCH_V8_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms6g -Xmx6g"
@@ -108,7 +108,7 @@ services:
     container_name: ada-elasticsearch-voter-live
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
-      - "cluster.name=isaac-ada-content"
+      - "cluster.name=ada-content-v8"
       - "network.host=${LOCAL_ADA_ELASTICSEARCH_V8_VOTER_IP}"
       - "discovery.seed_hosts=${LOCAL_ADA_ELASTICSEARCH_V8_IP},${REMOTE_ADA_ELASTICSEARCH_V8_IP},${REMOTE_ADA_ELASTICSEARCH_VOTER_V8_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
