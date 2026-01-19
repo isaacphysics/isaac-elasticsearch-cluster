@@ -24,6 +24,7 @@ services:
       - xpack.security.transport.ssl.keystore.path=certs/elastic-v8-certificates.p12
       - xpack.security.transport.ssl.truststore.path=certs/elastic-v8-certificates.p12
       - xpack.security.http.ssl.enabled=false
+      - xpack.ml.enabled=false
     ulimits:
       memlock: -1 # part of disabling swap
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
@@ -56,6 +57,7 @@ services:
       - xpack.security.transport.ssl.keystore.path=certs/elastic-v8-certificates.p12
       - xpack.security.transport.ssl.truststore.path=certs/elastic-v8-certificates.p12
       - xpack.security.http.ssl.enabled=false
+      - xpack.ml.enabled=false
     ulimits:
       memlock: -1 # part of disabling swap
       nproc: 4096 # doc suggestion: at least 4,096
@@ -89,6 +91,7 @@ services:
       - xpack.security.transport.ssl.keystore.path=certs/elastic-v8-certificates.p12
       - xpack.security.transport.ssl.truststore.path=certs/elastic-v8-certificates.p12
       - xpack.security.http.ssl.enabled=false
+      - xpack.ml.enabled=false
     ulimits:
       memlock: -1 # part of disabling swap
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
@@ -121,6 +124,7 @@ services:
       - xpack.security.transport.ssl.keystore.path=certs/elastic-v8-certificates.p12
       - xpack.security.transport.ssl.truststore.path=certs/elastic-v8-certificates.p12
       - xpack.security.http.ssl.enabled=false
+      - xpack.ml.enabled=false
     ulimits:
       memlock: -1 # part of disabling swap
       nproc: 4096 # doc suggestion: at least 4,096
