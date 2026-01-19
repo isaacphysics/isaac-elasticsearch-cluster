@@ -8,8 +8,8 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
       - "cluster.name=isaac-phy-content"
-      - "network.host=${LOCAL_PHY_ELASTICSEARCH_IP}"
-      - "discovery.seed_hosts=${REMOTE_PHY_ELASTICSEARCH_IP},${LOCAL_PHY_ELASTICSEARCH_VOTER_IP},${REMOTE_PHY_ELASTICSEARCH_VOTER_IP}" # other master-eligible nodes
+      - "network.host=${LOCAL_SCI_ELASTICSEARCH_V8_IP}"
+      - "discovery.seed_hosts=${REMOTE_SCI_ELASTICSEARCH_V8_IP},${LOCAL_SCI_ELASTICSEARCH_V8_IP},${REMOTE_SCI_ELASTICSEARCH_V8_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms6g -Xmx6g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-phy-node"
@@ -34,7 +34,7 @@ services:
       - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
-        ipv4_address: "${LOCAL_PHY_ELASTICSEARCH_IP}"
+        ipv4_address: "${LOCAL_SCI_ELASTICSEARCH_V8_IP}"
     restart: unless-stopped
 
   phy-elasticsearch-voter-live:
@@ -43,8 +43,8 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
       - "cluster.name=isaac-phy-content"
-      - "network.host=${LOCAL_PHY_ELASTICSEARCH_VOTER_IP}"
-      - "discovery.seed_hosts=${LOCAL_PHY_ELASTICSEARCH_IP},${REMOTE_PHY_ELASTICSEARCH_IP},${REMOTE_PHY_ELASTICSEARCH_VOTER_IP}" # other master-eligible nodes
+      - "network.host=${LOCAL_SCI_ELASTICSEARCH_V8_VOTER_IP}"
+      - "discovery.seed_hosts=${LOCAL_SCI_ELASTICSEARCH_V8_IP},${REMOTE_SCI_ELASTICSEARCH_V8_IP},${REMOTE_SCI_ELASTICSEARCH_V8_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-phy-voter-node"
@@ -65,7 +65,7 @@ services:
       - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
-        ipv4_address: "${LOCAL_PHY_ELASTICSEARCH_VOTER_IP}"
+        ipv4_address: "${LOCAL_SCI_ELASTICSEARCH_V8_VOTER_IP}"
     restart: unless-stopped
 
   ada-elasticsearch-live:
@@ -74,8 +74,8 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
       - "cluster.name=isaac-ada-content"
-      - "network.host=${LOCAL_ADA_ELASTICSEARCH_IP}"
-      - "discovery.seed_hosts=${REMOTE_ADA_ELASTICSEARCH_IP},${LOCAL_ADA_ELASTICSEARCH_VOTER_IP},${REMOTE_ADA_ELASTICSEARCH_VOTER_IP}" # other master-eligible nodes
+      - "network.host=${LOCAL_ADA_ELASTICSEARCH_V8_IP}"
+      - "discovery.seed_hosts=${REMOTE_ADA_ELASTICSEARCH_V8_IP},${LOCAL_ADA_ELASTICSEARCH_V8_VOTER_IP},${REMOTE_ADA_ELASTICSEARCH_V8_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms6g -Xmx6g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-ada-node"
@@ -100,7 +100,7 @@ services:
       - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
-        ipv4_address: "${LOCAL_ADA_ELASTICSEARCH_IP}"
+        ipv4_address: "${LOCAL_ADA_ELASTICSEARCH_V8_IP}"
     restart: unless-stopped
 
   ada-elasticsearch-voter-live:
@@ -109,8 +109,8 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     environment:
       - "cluster.name=isaac-ada-content"
-      - "network.host=${LOCAL_ADA_ELASTICSEARCH_VOTER_IP}"
-      - "discovery.seed_hosts=${LOCAL_ADA_ELASTICSEARCH_IP},${REMOTE_ADA_ELASTICSEARCH_IP},${REMOTE_ADA_ELASTICSEARCH_VOTER_IP}" # other master-eligible nodes
+      - "network.host=${LOCAL_ADA_ELASTICSEARCH_V8_VOTER_IP}"
+      - "discovery.seed_hosts=${LOCAL_ADA_ELASTICSEARCH_V8_IP},${REMOTE_ADA_ELASTICSEARCH_V8_IP},${REMOTE_ADA_ELASTICSEARCH_VOTER_V8_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-ada-voter-node"
@@ -131,7 +131,7 @@ services:
       - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
-        ipv4_address: "${LOCAL_ADA_ELASTICSEARCH_VOTER_IP}"
+        ipv4_address: "${LOCAL_ADA_ELASTICSEARCH_V8_VOTER_IP}"
     restart: unless-stopped
 
 volumes:
