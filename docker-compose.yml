@@ -111,7 +111,7 @@ services:
     environment:
       - "cluster.name=ada-content-v8"
       - "network.host=${LOCAL_ADA_ELASTICSEARCH_V8_VOTER_IP}"
-      - "discovery.seed_hosts=${LOCAL_ADA_ELASTICSEARCH_V8_IP},${REMOTE_ADA_ELASTICSEARCH_V8_IP},${REMOTE_ADA_ELASTICSEARCH_VOTER_V8_IP}" # other master-eligible nodes
+      - "discovery.seed_hosts=${LOCAL_ADA_ELASTICSEARCH_V8_IP},${REMOTE_ADA_ELASTICSEARCH_V8_IP},${REMOTE_ADA_ELASTICSEARCH_V8_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-ada-voter-node"
