@@ -147,5 +147,5 @@ volumes:
 
 networks:
   default:
-    external:
-      name: isaac
+    name: isaac
+    external: true
