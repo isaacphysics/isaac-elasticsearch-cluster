@@ -4,7 +4,7 @@ services:
   sci-elasticsearch-v9-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
     container_name: sci-elasticsearch-v9-live
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.3.2
     environment:
       - "cluster.name=sci-content-v9"
       - "network.host=${LOCAL_SCI_ELASTICSEARCH_V9_IP}"
@@ -40,7 +40,7 @@ services:
   sci-elasticsearch-v9-voter-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
     container_name: sci-elasticsearch-v9-voter-live
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.3.2
     environment:
       - "cluster.name=sci-content-v9"
       - "network.host=${LOCAL_SCI_ELASTICSEARCH_V9_VOTER_IP}"
@@ -72,7 +72,7 @@ services:
   ada-elasticsearch-v9-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
     container_name: ada-elasticsearch-v9-live
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.3.2
     environment:
       - "cluster.name=ada-content-v9"
       - "network.host=${LOCAL_ADA_ELASTICSEARCH_V9_IP}"
@@ -108,7 +108,7 @@ services:
   ada-elasticsearch-v9-voter-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
     container_name: ada-elasticsearch-v9-voter-live
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.3.2
     environment:
       - "cluster.name=ada-content-v9"
       - "network.host=${LOCAL_ADA_ELASTICSEARCH_V9_VOTER_IP}"
