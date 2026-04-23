@@ -1,14 +1,14 @@
 # For Elasticsearch to store its indexes, we usually need to increase the host machine's mmap count: https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html
 # If `sysctl vm.max_map_count` is < 262144, then `sysctl -w vm.max_map_count=262144` and set vm.max_map_count in /etc/sysctl.conf to the same value # elasticsearch(lx) had 16777215
 services:
-  sci-elasticsearch-v8-live:
+  sci-elasticsearch-v9-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
-    container_name: sci-elasticsearch-v8-live
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
+    container_name: sci-elasticsearch-v9-live
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.3.3
     environment:
-      - "cluster.name=sci-content-v8"
-      - "network.host=${LOCAL_SCI_ELASTICSEARCH_V8_IP}"
-      - "discovery.seed_hosts=${REMOTE_SCI_ELASTICSEARCH_V8_IP},${LOCAL_SCI_ELASTICSEARCH_V8_IP},${REMOTE_SCI_ELASTICSEARCH_V8_VOTER_IP}" # other master-eligible nodes
+      - "cluster.name=sci-content-v9"
+      - "network.host=${LOCAL_SCI_ELASTICSEARCH_V9_IP}"
+      - "discovery.seed_hosts=${REMOTE_SCI_ELASTICSEARCH_V9_IP},${LOCAL_SCI_ELASTICSEARCH_V9_IP},${REMOTE_SCI_ELASTICSEARCH_V9_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms6g -Xmx6g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-sci-node"
@@ -21,8 +21,8 @@ services:
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.security.transport.ssl.client_authentication=required
-      - xpack.security.transport.ssl.keystore.path=certs/elastic-v8-certificates.p12
-      - xpack.security.transport.ssl.truststore.path=certs/elastic-v8-certificates.p12
+      - xpack.security.transport.ssl.keystore.path=certs/elastic-v9-certificates.p12
+      - xpack.security.transport.ssl.truststore.path=certs/elastic-v9-certificates.p12
       - xpack.security.http.ssl.enabled=false
       - xpack.ml.enabled=false
     ulimits:
@@ -30,21 +30,21 @@ services:
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
       nofile: 1048576 # doc suggestion: at least 65,536
     volumes:
-      - elasticsearch-v8-sci-data:/usr/share/elasticsearch/data
+      - elasticsearch-v9-sci-data:/usr/share/elasticsearch/data
       - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
-        ipv4_address: "${LOCAL_SCI_ELASTICSEARCH_V8_IP}"
+        ipv4_address: "${LOCAL_SCI_ELASTICSEARCH_V9_IP}"
     restart: unless-stopped
 
-  sci-elasticsearch-v8-voter-live:
+  sci-elasticsearch-v9-voter-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
-    container_name: sci-elasticsearch-v8-voter-live
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
+    container_name: sci-elasticsearch-v9-voter-live
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.3.3
     environment:
-      - "cluster.name=sci-content-v8"
-      - "network.host=${LOCAL_SCI_ELASTICSEARCH_V8_VOTER_IP}"
-      - "discovery.seed_hosts=${LOCAL_SCI_ELASTICSEARCH_V8_IP},${REMOTE_SCI_ELASTICSEARCH_V8_IP},${REMOTE_SCI_ELASTICSEARCH_V8_VOTER_IP}" # other master-eligible nodes
+      - "cluster.name=sci-content-v9"
+      - "network.host=${LOCAL_SCI_ELASTICSEARCH_V9_VOTER_IP}"
+      - "discovery.seed_hosts=${LOCAL_SCI_ELASTICSEARCH_V9_IP},${REMOTE_SCI_ELASTICSEARCH_V9_IP},${REMOTE_SCI_ELASTICSEARCH_V9_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-sci-voter-node"
@@ -54,8 +54,8 @@ services:
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.security.transport.ssl.client_authentication=required
-      - xpack.security.transport.ssl.keystore.path=certs/elastic-v8-certificates.p12
-      - xpack.security.transport.ssl.truststore.path=certs/elastic-v8-certificates.p12
+      - xpack.security.transport.ssl.keystore.path=certs/elastic-v9-certificates.p12
+      - xpack.security.transport.ssl.truststore.path=certs/elastic-v9-certificates.p12
       - xpack.security.http.ssl.enabled=false
       - xpack.ml.enabled=false
     ulimits:
@@ -66,17 +66,17 @@ services:
       - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
-        ipv4_address: "${LOCAL_SCI_ELASTICSEARCH_V8_VOTER_IP}"
+        ipv4_address: "${LOCAL_SCI_ELASTICSEARCH_V9_VOTER_IP}"
     restart: unless-stopped
 
-  ada-elasticsearch-v8-live:
+  ada-elasticsearch-v9-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
-    container_name: ada-elasticsearch-v8-live
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
+    container_name: ada-elasticsearch-v9-live
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.3.3
     environment:
-      - "cluster.name=ada-content-v8"
-      - "network.host=${LOCAL_ADA_ELASTICSEARCH_V8_IP}"
-      - "discovery.seed_hosts=${REMOTE_ADA_ELASTICSEARCH_V8_IP},${LOCAL_ADA_ELASTICSEARCH_V8_VOTER_IP},${REMOTE_ADA_ELASTICSEARCH_V8_VOTER_IP}" # other master-eligible nodes
+      - "cluster.name=ada-content-v9"
+      - "network.host=${LOCAL_ADA_ELASTICSEARCH_V9_IP}"
+      - "discovery.seed_hosts=${REMOTE_ADA_ELASTICSEARCH_V9_IP},${LOCAL_ADA_ELASTICSEARCH_V9_VOTER_IP},${REMOTE_ADA_ELASTICSEARCH_V9_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms6g -Xmx6g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-ada-node"
@@ -89,8 +89,8 @@ services:
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.security.transport.ssl.client_authentication=required
-      - xpack.security.transport.ssl.keystore.path=certs/elastic-v8-certificates.p12
-      - xpack.security.transport.ssl.truststore.path=certs/elastic-v8-certificates.p12
+      - xpack.security.transport.ssl.keystore.path=certs/elastic-v9-certificates.p12
+      - xpack.security.transport.ssl.truststore.path=certs/elastic-v9-certificates.p12
       - xpack.security.http.ssl.enabled=false
       - xpack.ml.enabled=false
     ulimits:
@@ -98,21 +98,21 @@ services:
       nproc: -1 # doc suggestion: at least 4,096 our docker default is unlimited
       nofile: 1048576 # doc suggestion: at least 65,536
     volumes:
-      - elasticsearch-v8-ada-data:/usr/share/elasticsearch/data
+      - elasticsearch-v9-ada-data:/usr/share/elasticsearch/data
       - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
-        ipv4_address: "${LOCAL_ADA_ELASTICSEARCH_V8_IP}"
+        ipv4_address: "${LOCAL_ADA_ELASTICSEARCH_V9_IP}"
     restart: unless-stopped
 
-  ada-elasticsearch-v8-voter-live:
+  ada-elasticsearch-v9-voter-live:
     # container configuration https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
-    container_name: ada-elasticsearch-v8-voter-live
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
+    container_name: ada-elasticsearch-v9-voter-live
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.3.3
     environment:
-      - "cluster.name=ada-content-v8"
-      - "network.host=${LOCAL_ADA_ELASTICSEARCH_V8_VOTER_IP}"
-      - "discovery.seed_hosts=${LOCAL_ADA_ELASTICSEARCH_V8_IP},${REMOTE_ADA_ELASTICSEARCH_V8_IP},${REMOTE_ADA_ELASTICSEARCH_V8_VOTER_IP}" # other master-eligible nodes
+      - "cluster.name=ada-content-v9"
+      - "network.host=${LOCAL_ADA_ELASTICSEARCH_V9_VOTER_IP}"
+      - "discovery.seed_hosts=${LOCAL_ADA_ELASTICSEARCH_V9_IP},${REMOTE_ADA_ELASTICSEARCH_V9_IP},${REMOTE_ADA_ELASTICSEARCH_V9_VOTER_IP}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-ada-voter-node"
@@ -122,8 +122,8 @@ services:
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.security.transport.ssl.client_authentication=required
-      - xpack.security.transport.ssl.keystore.path=certs/elastic-v8-certificates.p12
-      - xpack.security.transport.ssl.truststore.path=certs/elastic-v8-certificates.p12
+      - xpack.security.transport.ssl.keystore.path=certs/elastic-v9-certificates.p12
+      - xpack.security.transport.ssl.truststore.path=certs/elastic-v9-certificates.p12
       - xpack.security.http.ssl.enabled=false
       - xpack.ml.enabled=false
     ulimits:
@@ -134,15 +134,15 @@ services:
       - /local/data/elasticsearch/certificates:/usr/share/elasticsearch/config/certs
     networks:
       default:
-        ipv4_address: "${LOCAL_ADA_ELASTICSEARCH_V8_VOTER_IP}"
+        ipv4_address: "${LOCAL_ADA_ELASTICSEARCH_V9_VOTER_IP}"
     restart: unless-stopped
 
 volumes:
-  elasticsearch-v8-sci-data:
-    name: elasticsearch-v8-sci-data
+  elasticsearch-v9-sci-data:
+    name: elasticsearch-v9-sci-data
     external: true
-  elasticsearch-v8-ada-data:
-    name: elasticsearch-v8-ada-data
+  elasticsearch-v9-ada-data:
+    name: elasticsearch-v9-ada-data
     external: true
 
 networks:
