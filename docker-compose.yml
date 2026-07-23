@@ -8,7 +8,7 @@ services:
     environment:
       - "cluster.name=sci-content-v9"
       - "network.host=${LOCAL_SCI_ELASTICSEARCH_V9_IP}"
-      - "discovery.seed_hosts=${REMOTE_SCI_ELASTICSEARCH_V9_IP},${LOCAL_SCI_ELASTICSEARCH_V9_IP},${REMOTE_SCI_ELASTICSEARCH_V9_VOTER_IP}" # other master-eligible nodes
+      - "discovery.seed_hosts=${REMOTE_SCI_ELASTICSEARCH_V9_ADDRESS},${LOCAL_SCI_ELASTICSEARCH_V9_VOTER_IP},${REMOTE_SCI_ELASTICSEARCH_V9_VOTER_ADDRESS}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms6g -Xmx6g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-sci-node"
@@ -44,7 +44,7 @@ services:
     environment:
       - "cluster.name=sci-content-v9"
       - "network.host=${LOCAL_SCI_ELASTICSEARCH_V9_VOTER_IP}"
-      - "discovery.seed_hosts=${LOCAL_SCI_ELASTICSEARCH_V9_IP},${REMOTE_SCI_ELASTICSEARCH_V9_IP},${REMOTE_SCI_ELASTICSEARCH_V9_VOTER_IP}" # other master-eligible nodes
+      - "discovery.seed_hosts=${LOCAL_SCI_ELASTICSEARCH_V9_IP},${REMOTE_SCI_ELASTICSEARCH_V9_ADDRESS},${REMOTE_SCI_ELASTICSEARCH_V9_VOTER_ADDRESS}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-sci-voter-node"
@@ -76,7 +76,7 @@ services:
     environment:
       - "cluster.name=ada-content-v9"
       - "network.host=${LOCAL_ADA_ELASTICSEARCH_V9_IP}"
-      - "discovery.seed_hosts=${REMOTE_ADA_ELASTICSEARCH_V9_IP},${LOCAL_ADA_ELASTICSEARCH_V9_VOTER_IP},${REMOTE_ADA_ELASTICSEARCH_V9_VOTER_IP}" # other master-eligible nodes
+      - "discovery.seed_hosts=${REMOTE_ADA_ELASTICSEARCH_V9_ADDRESS},${LOCAL_ADA_ELASTICSEARCH_V9_VOTER_IP},${REMOTE_ADA_ELASTICSEARCH_V9_VOTER_ADDRESS}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms6g -Xmx6g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-ada-node"
@@ -112,7 +112,7 @@ services:
     environment:
       - "cluster.name=ada-content-v9"
       - "network.host=${LOCAL_ADA_ELASTICSEARCH_V9_VOTER_IP}"
-      - "discovery.seed_hosts=${LOCAL_ADA_ELASTICSEARCH_V9_IP},${REMOTE_ADA_ELASTICSEARCH_V9_IP},${REMOTE_ADA_ELASTICSEARCH_V9_VOTER_IP}" # other master-eligible nodes
+      - "discovery.seed_hosts=${LOCAL_ADA_ELASTICSEARCH_V9_IP},${REMOTE_ADA_ELASTICSEARCH_V9_ADDRESS},${REMOTE_ADA_ELASTICSEARCH_V9_VOTER_ADDRESS}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-ada-voter-node"
