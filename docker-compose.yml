@@ -8,7 +8,10 @@ services:
     environment:
       - "cluster.name=sci-content-v9"
       - "network.host=${LOCAL_SCI_ELASTICSEARCH_V9_IP}"
-      - "discovery.seed_hosts=${REMOTE_SCI_ELASTICSEARCH_V9_ADDRESS},${LOCAL_SCI_ELASTICSEARCH_V9_VOTER_IP},${REMOTE_SCI_ELASTICSEARCH_V9_VOTER_ADDRESS}" # other master-eligible nodes
+      - "network.bind_host=0.0.0.0"
+      - "network.publish_host=${LOCAL_SERVER_IP}"
+      - "transport.publish_port=${SCI_ELASTICSEARCH_PORT}"
+      - "discovery.seed_hosts=${REMOTE_SERVER_IP}:${SCI_ELASTICSEARCH_PORT},${LOCAL_SCI_ELASTICSEARCH_V9_VOTER_IP},${REMOTE_SERVER_IP}:${SCI_ELASTICSEARCH_VOTER_PORT}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms6g -Xmx6g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-sci-node"
@@ -44,7 +47,10 @@ services:
     environment:
       - "cluster.name=sci-content-v9"
       - "network.host=${LOCAL_SCI_ELASTICSEARCH_V9_VOTER_IP}"
-      - "discovery.seed_hosts=${LOCAL_SCI_ELASTICSEARCH_V9_IP},${REMOTE_SCI_ELASTICSEARCH_V9_ADDRESS},${REMOTE_SCI_ELASTICSEARCH_V9_VOTER_ADDRESS}" # other master-eligible nodes
+      - "network.bind_host=0.0.0.0"
+      - "network.publish_host=${LOCAL_SERVER_IP}"
+      - "transport.publish_port=${SCI_ELASTICSEARCH_VOTER_PORT}"
+      - "discovery.seed_hosts=${LOCAL_SCI_ELASTICSEARCH_V9_IP},${REMOTE_SERVER_IP}:${SCI_ELASTICSEARCH_PORT},${REMOTE_SERVER_IP}:${SCI_ELASTICSEARCH_VOTER_PORT}" # other master-eligible nodes
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "bootstrap.memory_lock=true" # part of disabling swap
       - "node.name=${HOSTNAME}-sci-voter-node"
