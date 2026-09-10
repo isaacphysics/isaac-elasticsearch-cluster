@@ -4,8 +4,8 @@
 # have all voter nodes up all the time
 
 import os
+import re
 import sys
-import itertools
 import requests
 from pprint import pprint
 import base64
@@ -35,42 +35,23 @@ def elastic_ip(site, destination='local', node_type='master_candidate'):
   """Returns the IP address of the node matching the function's arguments"""
   return os.getenv(ip_env_var(site, destination, node_type))
 
-def get_node_states():
-  """Iterates through all the nodes we expect to be in our four node cluster to gather information about each"""
-  nodes_info = {}
-  for site, destination, node_type in itertools.product(sites, destinations, node_types): # every combination
-    try:
-      node_response = requests.get(f'http://{elastic_ip(site, destination, node_type)}:9200', headers=auth_header(site))
-      node_name = node_response.json()['name']
-      nodes_info[node_name] = {
-        'site': site, 'destination': destination, 'node_type': node_type,
-        'name': node_name, 'env_var': ip_env_var(site, destination, node_type)
-      }
-    except requests.exceptions.ConnectionError as e:
-      print(
-        f'ERROR: ElasticSearch node at {ip_env_var(site, destination, node_type)} is not up. '
-        f'If this is unexpected, bring it up by typing the following command{" on the REMOTE MACHINE" if destination == "remote" else ""}:\n'
-        f'export HOSTNAME && docker-compose up -d {site.lower()}-elasticsearch-v9-{"voter-" if node_type == "voter" else ""}live'
-      )
-      if "n" == input('Continue? [y/n]'):
-        sys.exit(ERROR_EXIT_CODE)
-  return nodes_info
-
 def get_cluster_state():
   """Returns the clusters' states by site"""
   return {site: requests.get(f'http://{elastic_ip(site)}:9200/_cluster/state', headers=auth_header(site)).json() for site in sites}
 
-def get_node_info_by_id(nodes_info, cluster_info):
-  """Combines node and cluster info to get IDs for the nodes and indexes the result by id"""
+def get_node_info_by_id(cluster_info):
+  """Uses cluster info to get IDs & names for the nodes and indexes the result by ID"""
   nodes_by_id = {}
   for site in sites:
     for node_id, node_details in cluster_info[site]['nodes'].items():
       node_name = node_details['name']
-      if node_name in nodes_info:
-        nodes_by_id[node_id] = dict(nodes_info[node_name], id=node_id)
-      else:
+      match = re.compile(r'^(?P<hostname>.+)-(?P<site>' + '|'.join(sites) + r')-(?P<voter>voter-)?node$').match(node_name)
+      if match is None:
         print(f'ERROR: Found an unexpected node in cluster with name {node_name}. Probably worth stopping and investigating further')
         sys.exit(ERROR_EXIT_CODE)
+      node_type = 'voter' if match.group('voter') else 'master_candidate'
+      destination = 'local' if match.group('hostname') == os.getenv('HOSTNAME') else 'remote'
+      nodes_by_id[node_id] = {'site': site, 'destination': destination, 'node_type': node_type, 'name': node_name, 'id': node_id}
   return nodes_by_id
 
 def local_is_leader(cluster_info, nodes_by_id):
@@ -86,7 +67,7 @@ def local_is_leader(cluster_info, nodes_by_id):
     local_is_leader_for_all_sites &= local_score > remote_score
   return local_is_leader_for_all_sites
 
-def update_cluster_voting_configuration(cluster_info, nodes_by_id):
+def update_cluster_voting_configuration(nodes_by_id):
   """Clears the excluded voters list and then adds the remote voter to the list for each site's cluster"""
   for site in sites:
     # Clear the voting exclusions list for this site's cluster
@@ -114,15 +95,14 @@ def update_cluster_voting_configuration(cluster_info, nodes_by_id):
 
 
 if __name__ == '__main__':
-  nodes_info = get_node_states()
   cluster_info = get_cluster_state()
-  nodes_by_id = get_node_info_by_id(nodes_info, cluster_info)
+  nodes_by_id = get_node_info_by_id(cluster_info)
 
   if local_is_leader(cluster_info, nodes_by_id):
     print("This machine is already the ElasticSearch cluster leader")
     sys.exit(SUCCESS_EXIT_CODE)
 
-  update_cluster_voting_configuration(cluster_info, nodes_by_id)
+  update_cluster_voting_configuration(nodes_by_id)
   
   updated_cluster_info = get_cluster_state()
   if local_is_leader(updated_cluster_info, nodes_by_id):
