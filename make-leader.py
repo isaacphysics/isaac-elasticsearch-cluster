@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# !!! export HOSTNAME before running this !!!
 # have all voter nodes up all the time
 
 import os
@@ -15,8 +16,6 @@ SUCCESS_EXIT_CODE = 0
 ERROR_EXIT_CODE = 1
 
 sites = ['sci', 'ada']
-destinations = ['local', 'remote']
-node_types = ['master_candidate', 'voter']
 
 site_password = {
   'sci': os.getenv('SCI_ELASTIC_PASSWORD'),
@@ -27,13 +26,13 @@ def auth_header(site):
   token = f'elastic:{site_password[site]}'.encode()
   return {'Authorization': f'Basic {base64.b64encode(token).decode("utf8")}'}
 
-def ip_env_var(site, destination, node_type):
-  """Form the environment variable name from the function arguments"""
-  return f'{destination.upper()}_{site.upper()}_ELASTICSEARCH_V9_{"VOTER_" if node_type == "voter" else ""}IP'
+def ip_env_var(site):
+  """Form the local master candidate ES IP environment variable name for the specified site"""
+  return f'LOCAL_{site.upper()}_ELASTICSEARCH_V9_IP'
 
-def elastic_ip(site, destination='local', node_type='master_candidate'):
-  """Returns the IP address of the node matching the function's arguments"""
-  return os.getenv(ip_env_var(site, destination, node_type))
+def elastic_ip(site):
+  """Returns the IP address of the local master candidate node for the specified site"""
+  return os.getenv(ip_env_var(site))
 
 def get_cluster_state():
   """Returns the clusters' states by site"""
