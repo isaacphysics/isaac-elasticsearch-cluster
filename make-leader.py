@@ -39,7 +39,7 @@ def get_cluster_state():
   return {site: requests.get(f'http://{elastic_ip(site)}:9200/_cluster/state', headers=auth_header(site)).json() for site in sites}
 
 def get_node_info_by_id(cluster_info):
-  """Uses cluster info to get IDs & names for the nodes and indexes the result by ID"""
+  """Uses cluster info to get node info and indexes the result by ID"""
   nodes_by_id = {}
   for site in sites:
     for node_id, node_details in cluster_info[site]['nodes'].items():
